@@ -33,7 +33,7 @@ controller = "/var/www/pterodactyl/app/Http/Controllers/Admin/Nodes/NodeViewCont
 with open(controller, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY" in content:
+if "PROTEKSI_LUXZ" in content:
     print("⚠️ Proteksi sudah ada di NodeViewController")
     exit(0)
 
@@ -57,9 +57,9 @@ while i < len(lines):
             if j > i:
                 new_lines.append(lines[j])
         
-        new_lines.append("        // PROTEKSI_JHONALEY: Hanya admin ID 1")
+        new_lines.append("        // PROTEKSI_LUXZ: Hanya admin ID 1")
         new_lines.append("        if (!Auth::user() || (int) Auth::user()->id !== 1) {")
-        new_lines.append("            abort(403, 'Akses ditolak - protect by Jhonaley Tech');")
+        new_lines.append("            abort(403, 'Akses ditolak - protect by Luxz Official');")
         new_lines.append("        }")
         
         if j > i:
@@ -73,7 +73,7 @@ print("✅ Proteksi berhasil diinjeksi ke NodeViewController")
 PYEOF
 
 echo ""
-grep -n "PROTEKSI_JHONALEY" "$CONTROLLER"
+grep -n "PROTEKSI_LUXZ" "$CONTROLLER"
 
 # === Sembunyikan menu Nodes di sidebar ===
 echo ""
@@ -162,7 +162,7 @@ fi
 # === Proteksi NodeController (halaman list nodes) ===
 NODE_LIST="/var/www/pterodactyl/app/Http/Controllers/Admin/Nodes/NodeController.php"
 if [ -f "$NODE_LIST" ]; then
-  if ! grep -q "PROTEKSI_JHONALEY" "$NODE_LIST"; then
+  if ! grep -q "PROTEKSI_LUXZ" "$NODE_LIST"; then
     cp "$NODE_LIST" "${NODE_LIST}.bak_${TIMESTAMP}"
     
     python3 << 'PYEOF3'
@@ -171,7 +171,7 @@ controller = "/var/www/pterodactyl/app/Http/Controllers/Admin/Nodes/NodeControll
 with open(controller, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY" in content:
+if "PROTEKSI_LUXZ" in content:
     print("⚠️ Sudah ada proteksi")
     exit(0)
 
@@ -196,9 +196,9 @@ while i < len(lines):
             if j > i:
                 new_lines.append(lines[j])
         
-        new_lines.append("        // PROTEKSI_JHONALEY: Hanya admin ID 1")
+        new_lines.append("        // PROTEKSI_LUXZ: Hanya admin ID 1")
         new_lines.append("        if (!Auth::user() || (int) Auth::user()->id !== 1) {")
-        new_lines.append("            abort(403, 'Akses ditolak - protect by Jhonaley Tech');")
+        new_lines.append("            abort(403, 'Akses ditolak - protect by Luxz Official');")
         new_lines.append("        }")
         
         if j > i:
@@ -251,7 +251,7 @@ controller = "$ACCT_CTRL"
 with open(controller, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY_ACCOUNT" in content:
+if "PROTEKSI_LUXZ_ACCOUNT" in content:
     print("⚠️ Proteksi sudah ada di AccountController")
     exit(0)
 
@@ -276,10 +276,10 @@ while i < len(lines):
             if j > i:
                 new_lines.append(lines[j])
         
-        new_lines.append("        // PROTEKSI_JHONALEY_ACCOUNT: Block ubah data admin ID 1")
+        new_lines.append("        // PROTEKSI_LUXZ_ACCOUNT: Block ubah data admin ID 1")
         new_lines.append("        \$targetUser = \$request->user();")
         new_lines.append("        if ((int) \$targetUser->id === 1 && (!Auth::user() || (int) Auth::user()->id !== 1)) {")
-        new_lines.append("            abort(403, 'Akses ditolak - protect by Jhonaley Tech');")
+        new_lines.append("            abort(403, 'Akses ditolak - protect by Luxz Official');")
         new_lines.append("        }")
         
         if j > i:
@@ -293,7 +293,7 @@ print("✅ Proteksi berhasil diinjeksi ke Client AccountController")
 PYEOF4
 
   echo ""
-  grep -n "PROTEKSI_JHONALEY_ACCOUNT" "$ACCT_CTRL"
+  grep -n "PROTEKSI_LUXZ_ACCOUNT" "$ACCT_CTRL"
 else
   echo "⚠️ Client AccountController tidak ditemukan, skip."
 fi
@@ -321,7 +321,7 @@ if [ -d "$FORM_REQUEST_DIR" ]; then
     if [ -f "$FR_FILE" ]; then
       FR_NAME=$(basename "$FR_FILE")
       
-      if grep -q "PROTEKSI_JHONALEY_FORMREQ" "$FR_FILE"; then
+      if grep -q "PROTEKSI_LUXZ_FORMREQ" "$FR_FILE"; then
         echo "⚠️ $FR_NAME sudah diproteksi"
         continue
       fi
@@ -337,7 +337,7 @@ fr_name = "$FR_NAME"
 with open(fr_file, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY_FORMREQ" in content:
+if "PROTEKSI_LUXZ_FORMREQ" in content:
     print(f"⚠️ {fr_name} sudah diproteksi")
     exit(0)
 
@@ -348,10 +348,10 @@ match = re.search(auth_pattern, content)
 if match:
     # Inject check di awal authorize()
     inject = '''
-        // PROTEKSI_JHONALEY_FORMREQ: Block modifikasi user ID 1
+        // PROTEKSI_LUXZ_FORMREQ: Block modifikasi user ID 1
         if (preg_match('#/api/application/users/1(?:\\\?|$|/)#', request()->getPathInfo())) {
             if (in_array(request()->method(), ['PATCH', 'PUT', 'DELETE'])) {
-                abort(403, 'Akses ditolak - protect by Jhonaley Tech');
+                abort(403, 'Akses ditolak - protect by Luxz Official');
             }
         }
 '''
@@ -368,12 +368,12 @@ else:
     if class_match:
         inject_method = '''
 
-    // PROTEKSI_JHONALEY_FORMREQ: Block modifikasi user ID 1
+    // PROTEKSI_LUXZ_FORMREQ: Block modifikasi user ID 1
     public function authorize(): bool
     {
         if (preg_match('#/api/application/users/1(?:\\\?|$|/)#', request()->getPathInfo())) {
             if (in_array(request()->method(), ['PATCH', 'PUT', 'DELETE'])) {
-                abort(403, 'Akses ditolak - protect by Jhonaley Tech');
+                abort(403, 'Akses ditolak - protect by Luxz Official');
             }
         }
         return true;
@@ -417,7 +417,7 @@ use Illuminate\Http\Request;
 class ProtectAdminUser
 {
     /**
-     * PROTEKSI_JHONALEY_MIDDLEWARE: Block semua akses API ke User ID 1
+     * PROTEKSI_LUXZ_MIDDLEWARE: Block semua akses API ke User ID 1
      */
     public function handle(Request $request, Closure $next)
     {
@@ -425,7 +425,7 @@ class ProtectAdminUser
 
         if (preg_match('#/api/application/users/1(?:\?|$|/)#', $path)) {
             if (in_array($request->method(), ['PATCH', 'PUT', 'DELETE', 'POST'])) {
-                abort(403, 'Akses ditolak - protect by Jhonaley Tech');
+                abort(403, 'Akses ditolak - protect by Luxz Official');
             }
         }
 
@@ -506,7 +506,7 @@ if [ -n "$APP_USER_CTRL" ] && [ -f "$APP_USER_CTRL" ]; then
   fi
   cp "$APP_USER_CTRL" "${APP_USER_CTRL}.bak_${TIMESTAMP}"
 
-  if ! grep -q "PROTEKSI_JHONALEY_APPUSER" "$APP_USER_CTRL"; then
+  if ! grep -q "PROTEKSI_LUXZ_APPUSER" "$APP_USER_CTRL"; then
     python3 << PYEOF6
 import re
 
@@ -515,7 +515,7 @@ controller = "$APP_USER_CTRL"
 with open(controller, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY_APPUSER" in content:
+if "PROTEKSI_LUXZ_APPUSER" in content:
     exit(0)
 
 lines = content.split("\n")
@@ -533,14 +533,14 @@ while i < len(lines):
             if j > i:
                 new_lines.append(lines[j])
         
-        new_lines.append("        // PROTEKSI_JHONALEY_APPUSER: Block akses API untuk admin ID 1")
+        new_lines.append("        // PROTEKSI_LUXZ_APPUSER: Block akses API untuk admin ID 1")
         if 'User \$user' in line or (j > i and any('User \$user' in lines[k] for k in range(i, min(j+1, len(lines))))):
             new_lines.append("        if (isset(\$user) && (int) \$user->id === 1) {")
-            new_lines.append("            abort(403, 'Akses ditolak - protect by Jhonaley Tech');")
+            new_lines.append("            abort(403, 'Akses ditolak - protect by Luxz Official');")
             new_lines.append("        }")
         else:
             new_lines.append("        if (preg_match('#/users/1(\\\\?|\$|/|\\\\b)#', \$request->getPathInfo())) {")
-            new_lines.append("            abort(403, 'Akses ditolak - protect by Jhonaley Tech');")
+            new_lines.append("            abort(403, 'Akses ditolak - protect by Luxz Official');")
             new_lines.append("        }")
         
         if j > i:
@@ -593,7 +593,7 @@ controller = os.environ["API_CTRL_PATH"]
 with open(controller, "r") as f:
     content = f.read()
 
-if "PROTEKSI_JHONALEY_APIKEY" in content:
+if "PROTEKSI_LUXZ_APIKEY" in content:
     print("⚠️ Proteksi sudah ada di ApiController")
     exit(0)
 
@@ -619,7 +619,7 @@ while i < len(lines):
             if j > i:
                 new_lines.append(lines[j])
         
-        new_lines.append("        // PROTEKSI_JHONALEY_APIKEY: Setiap admin hanya lihat key milik sendiri")
+        new_lines.append("        // PROTEKSI_LUXZ_APIKEY: Setiap admin hanya lihat key milik sendiri")
         new_lines.append("        if (Auth::user() && (int) Auth::user()->id !== 1) {")
         new_lines.append("            $keys = \\Pterodactyl\\Models\\ApiKey::where('user_id', (int) Auth::user()->id)")
         new_lines.append("                ->where('key_type', \\Pterodactyl\\Models\\ApiKey::TYPE_APPLICATION)")
